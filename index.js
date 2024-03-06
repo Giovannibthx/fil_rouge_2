@@ -1,6 +1,10 @@
 import bodyParser from "body-parser";
 import express from "express";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+import userRouter from "./routes/userRouter.js";
+
+dotenv.config();
 
 const app = express();
 
@@ -18,8 +22,7 @@ app.use(
     })
 );
 
-const mongoDB =
-    "mongodb+srv://giovannibthx:2OI2eOb86SziIhcw@filrouge2.4qv5nud.mongodb.net/?retryWrites=true&w=majority&appName=filRouge2";
+const mongoDB = process.env.MONGO_URI;
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 
 const db = mongoose.connection;
@@ -28,5 +31,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 app.get("/", (req, res) => {
     res.send("Welcome to our API using mongo and express");
 });
+
+app.use("/", userRouter);
 
 app.listen(port, () => console.log(`server is running on port ${port}`));
