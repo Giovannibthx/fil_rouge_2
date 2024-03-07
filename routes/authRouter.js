@@ -6,7 +6,7 @@ const authRouter = express.Router();
 
 authRouter.post("/register", async (req, res) => {
     try {
-        const { first_name, email, password } = req.body;
+        const { first_name, last_name, email, password } = req.body;
         const emailVerification = await User.findOne({ email: email });
         if (emailVerification) {
             return res.status(400).json({ message: "Email already exists" });
@@ -16,6 +16,7 @@ authRouter.post("/register", async (req, res) => {
 
         const newUser = new User({
             first_name,
+            last_name,
             email,
             password: hashedPassword,
         });
@@ -45,12 +46,10 @@ authRouter.post("/login", async (req, res) => {
                 .json({ message: "Invalid email or password" });
         }
 
-        const token = jwt.sign(
-            { _id: user._id, firstname: first_name, lastname: last_name },
-            process.env.TOKEN_SECRET,
-            { expiresIn: "1d" }
-        );
-        res.header("auth-token", token).json({ token });
+        const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
+            expiresIn: "1d",
+        });
+        res.setHeader("auth-token", token);
         res.json({ message: "Logged in" });
     } catch (error) {
         res.status(400).json({ message: error.message });
