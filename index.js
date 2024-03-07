@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRouter from "./routes/userRouter.js";
 import postRouter from "./routes/postRouter.js";
+import authRouter from "./routes/authRouter.js";
 import cors from "cors";
 
 dotenv.config();
@@ -35,6 +36,6 @@ app.get("/", (req, res) => {
     res.send("Welcome to our API using mongo and express");
 });
 
-app.use("/", userRouter, postRouter);
+app.use("/", userRouter, postRouter, authRouter);
 
 app.listen(port, () => console.log(`server is running on port ${port}`));
