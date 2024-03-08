@@ -50,7 +50,7 @@ authRouter.post("/login", async (req, res) => {
             expiresIn: "1d",
         });
         res.setHeader("auth-token", token);
-        res.json({ message: "Logged in" });
+        res.json({ message: "Logged in", first_name: user.first_name });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
